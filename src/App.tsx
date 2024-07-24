@@ -22,13 +22,16 @@ function App() {
   }, []);
 
   function createTodo() {
-    client.models.Todo.create({ content: window.prompt("Todo content") });
+    client.models.Todo.create({ content: window.prompt("Todo content"), devId: "123" });
   }
 
   function deleteToDo(id: string) {
     client.models.Todo.delete({ id });
   }
 
+  function deleteLog(id: string) {
+    client.models.Todo.delete({ id });
+  }
 
   function createLogs() {
     client.models.Logs.create({ content: window.prompt("Logs content") });
@@ -50,7 +53,7 @@ function App() {
           <button onClick={createLogs}>+ new log</button>
           <ul>
             {logs.map((log) => (
-              <li key={log.id} onClick={() => deleteToDo(log.id)}>{log.content}</li>
+              <li key={log.id} onClick={() => deleteLog(log.id)}>{log.content}</li>
             ))}
           </ul>
           <button onClick={signOut}>Sign out</button>
