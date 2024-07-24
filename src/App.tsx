@@ -9,10 +9,15 @@ const client = generateClient<Schema>();
 
 function App() {
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
+  const [logs, setLogs] = useState<Array<Schema["Logs"]["type"]>>([]);
 
   useEffect(() => {
     client.models.Todo.observeQuery().subscribe({
       next: (data) => setTodos([...data.items]),
+    });
+
+    client.models.Logs.observeQuery().subscribe({
+      next: (data) => setLogs([...data.items]),
     });
   }, []);
 
@@ -22,6 +27,11 @@ function App() {
 
   function deleteToDo(id: string) {
     client.models.Todo.delete({ id });
+  }
+
+
+  function createLogs() {
+    client.models.Logs.create({ content: window.prompt("Logs content") });
   }
 
   return (
@@ -34,6 +44,13 @@ function App() {
           <ul>
             {todos.map((todo) => (
               <li key={todo.id} onClick={() => deleteToDo(todo.id)}>{todo.content}</li>
+            ))}
+          </ul>
+          <h1>My Logs</h1>
+          <button onClick={createLogs}>+ new log</button>
+          <ul>
+            {logs.map((log) => (
+              <li key={log.id} onClick={() => deleteToDo(log.id)}>{log.content}</li>
             ))}
           </ul>
           <button onClick={signOut}>Sign out</button>
