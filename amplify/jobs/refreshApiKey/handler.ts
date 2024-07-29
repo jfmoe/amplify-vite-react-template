@@ -1,13 +1,14 @@
 import { AppSyncClient, UpdateApiKeyCommand } from '@aws-sdk/client-appsync';
-
-const region = process.env.AWS_REGION;
-const apiId = 'kb23q4cnwrejndxxfzldlryt2e';
-const apiKey = 'da2-eoxuusx3sbcqfailgk43mgfioe';
+import { env } from '$amplify/env/refresh-api-key';
 
 const oneYearFromNow = new Date();
 oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1);
 
 export const handler = async () => {
+  const region = process.env.AWS_REGION;
+  const apiId = env.apiId;
+  const apiKey = env.apiKey;
+
   try {
     const client = new AppSyncClient({
       region,
