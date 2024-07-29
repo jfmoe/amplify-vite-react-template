@@ -1,7 +1,7 @@
-import { defineFunction } from '@aws-amplify/backend';
+import { defineFunction } from '@aws-amplify/backend-function';
 
 export const refreshApiKey = defineFunction({
   name: 'refresh-api-key',
-  schedule: 'every 1day',
+  schedule: 'every 5m',
   entry: './handler.ts',
 });
