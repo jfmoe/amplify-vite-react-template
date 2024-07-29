@@ -10,7 +10,9 @@ const backend = defineBackend({
   refreshApiKey,
 });
 
-backend.auth.resources.unauthenticatedUserIamRole.addToPrincipalPolicy(
+const refreshApiKeyLambda = backend.refreshApiKey.resources.lambda;
+
+refreshApiKeyLambda.addToRolePolicy(
   new PolicyStatement({
     actions: ['appsync:UpdateApiKey'],
     resources: ['*'],
