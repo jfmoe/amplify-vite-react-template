@@ -7,15 +7,33 @@ specifies that any user authenticated via an API key can "create", "read",
 "update", and "delete" any "Todo" records.
 =========================================================================*/
 const schema = a.schema({
-  Todo: a
+  User: a
     .model({
-      content: a.string(),
-      devId: a.string().default('')
-    })
-    .authorization((allow) => [allow.publicApiKey().to(["create", "update", "get", "list", "search", "listen", "sync"])]),
-  Logs: a
-    .model({
-      content: a.string(),
+      ownerId: a.string().default(''),
+      birthday: a.number().default(-28800),
+      status: a.number().default(0),
+      weight: a.number(),
+      weightUnit: a.number.default('kg'),
+      breed: a.string().default(''),
+      sex: a.number().default(0),
+      extInfo: a.string().default('{\"weightScale\":1}'),
+      bindUser: a.string().default(''),
+      heightUnit: a.string().default('cm'),
+      category: a.string().default('xyj'),
+      diseaseHistory: a.string().default(''),
+      brandCode: a.string().default(''),
+      contact: a.string().default(''),
+      productId: a.string().default(''),
+      type: a.number().default(1),
+      devId: a.string().default(''),
+      userType: a.number().default(21),
+      uid: a.string().default(''),
+      height: a.number.default(170),
+      userTypeCode: a.string().default('user'),
+      hipUnit: a.string().default(''),
+      avatar: a.string().default(''),
+      userRole: a.number().default(0),
+      userName: a.string().default('user'),
     })
     .authorization((allow) => [allow.publicApiKey().to(["create", "update", "get", "list", "search", "listen", "sync"])]),
 });
