@@ -12,12 +12,12 @@ const schema = a.schema({
     content: a.string(),
     devId: a.string().default('')
   })
-  .authorization((allow) => [allow.publicApiKey().to(["create", "update", "get", "list", "search", "listen", "sync"])]),
+  .authorization((allow) => [allow.publicApiKey().to(["create", "update", "get", "delete", "list", "search", "listen", "sync"])]),
   Logs: a
   .model({
     content: a.string(),
   })
-  .authorization((allow) => [allow.publicApiKey().to(["create", "update", "get", "list", "search", "listen", "sync"])]),
+  .authorization((allow) => [allow.publicApiKey().to(["create", "update", "get", "delete", "list", "search", "listen", "sync"])]),
   User: a
     .model({
       ownerId: a.string().default(''),
@@ -46,7 +46,7 @@ const schema = a.schema({
       userRole: a.integer().default(0),
       userName: a.string().default('user'),
     })
-    .authorization((allow) => [allow.publicApiKey().to(["create", "update", "get", "list", "search", "listen", "sync"])]),
+    .authorization((allow) => [allow.publicApiKey().to(["create", "update", "get", "delete", "list", "search", "listen", "sync"])]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
