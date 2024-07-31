@@ -21,7 +21,7 @@ const schema = a.schema({
   User: a
     .model({
       ownerId: a.string().default(''),
-      birthday: a.integer().default(-28800),
+      birthday: a.string().default('-28800'),
       status: a.integer().default(0),
       weight: a.integer(),
       weightUnit: a.string().default('kg'),
