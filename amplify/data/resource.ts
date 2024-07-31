@@ -24,7 +24,7 @@ const schema = a.schema({
       birthday: a.integer().default(-28800),
       status: a.integer().default(0),
       weight: a.integer(),
-      weightUnit: a.integer().default('kg'),
+      weightUnit: a.string().default('kg'),
       breed: a.string().default(''),
       sex: a.integer().default(0),
       extInfo: a.string().default('{\"weightScale\":1}'),
