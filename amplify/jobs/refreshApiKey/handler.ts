@@ -1,4 +1,5 @@
 import { AppSyncClient, UpdateApiKeyCommand } from '@aws-sdk/client-appsync';
+// @ts-ignore
 import { env } from '$amplify/env/refresh-api-key';
 
 const oneYearFromNow = new Date();
