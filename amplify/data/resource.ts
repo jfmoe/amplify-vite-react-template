@@ -47,6 +47,22 @@ const schema = a.schema({
       userName: a.string().default('user'),
     })
     .authorization((allow) => [allow.publicApiKey().to(["create", "update", "get", "delete", "list", "search", "listen", "sync"])]),
+  BpgData: a
+  .model({
+    sys: a.integer().default(0).required(), // 血压高压
+    dia: a.integer().default(0).required(), // 血压低压
+    pulse: a.integer().default(0).required(), // 脉搏
+    arr: a.boolean().default(false).required(), // false:心率正常;true:心率不齐
+    bpLevel: a.enum(['WHO_LV0', 'WHO_LV1', 'WHO_LV2', 'WHO_LV3', 'WHO_LV4', 'WHO_LV5']), // 根据数值计算出来的标准
+    time: a.string().default('').required(), // 测量时间 时间戳
+    devId: a.string().required(), // 设备Id
+    pid: a.string().required(), // 产品pid
+    userId: a.string().required(), // 用户Id
+    reportType: a.integer().default(0).required(), // 上报类型
+    remark: a.string().default(''), // 备注
+  })
+  .authorization((allow) => [allow.publicApiKey().to(["create", "update", "get", "delete", "list", "search", "listen", "sync"])]),
+    
 });
 
 export type Schema = ClientSchema<typeof schema>;
