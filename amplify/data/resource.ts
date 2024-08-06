@@ -60,6 +60,7 @@ const schema = a.schema({
     userId: a.string().required(), // 用户Id
     reportType: a.integer().default(0).required(), // 上报类型
     remark: a.string().default(''), // 备注
+    unallocatedId: a.string().default(''), // 未分配Id
   })
   .authorization((allow) => [allow.publicApiKey().to(["create", "update", "get", "delete", "list", "search", "listen", "sync"])]),
     
