@@ -34,16 +34,12 @@ const App: React.FC = () => {
     });
   }
 
-  function deleteToDo(id: string) {
-    client.models.Todo.delete({ id });
-  }
-
   function updateToDo(id: string) {
     client.models.Todo.update({ id, content: window.prompt('Todo content') });
   }
 
   function deleteLog(id: string) {
-    client.models.Todo.delete({ id });
+    client.models.Logs.delete({ id });
   }
 
   function createLogs() {
