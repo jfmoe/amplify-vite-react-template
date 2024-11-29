@@ -26,12 +26,15 @@ const App: React.FC = () => {
     fetchData();
   }, []);
 
-  function createTodo() {
-    client.models.Todo.create({
+  async function createTodo() {
+    console.log(Math.floor(Date.now() / 1000) + 60);
+    const data = await client.models.Todo.create({
       content: window.prompt('Todo content'),
       devId: '123',
-      _ttl: Date.now() / 1000 + 60,
+      _ttl: Math.floor(Date.now() / 1000) + 60,
     });
+
+    console.log(data);
   }
 
   function updateToDo(id: string) {
