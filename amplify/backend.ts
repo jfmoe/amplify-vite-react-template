@@ -19,8 +19,15 @@ refreshApiKeyLambda.addToRolePolicy(
   }),
 );
 
+const { cfnResources } = backend.data.resources;
+
 // 容灾处理：为所有 table 开启时间点恢复功能
-const { amplifyDynamoDbTables } = backend.data.resources.cfnResources;
-for (const table of Object.values(amplifyDynamoDbTables)) {
+for (const table of Object.values(cfnResources.amplifyDynamoDbTables)) {
   table.pointInTimeRecoveryEnabled = true;
 }
+
+// 根据表中设定的 TTL 属性，为表开启 TTL 功能（如果当前时间超过设定的 Unix timestamp，则该条数据过期）
+cfnResources.amplifyDynamoDbTables['Todo'].timeToLiveAttribute = {
+  attributeName: '_ttl',
+  enabled: true,
+};

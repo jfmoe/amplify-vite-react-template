@@ -1,4 +1,4 @@
-import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
+import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
 
 /*== STEP 1 ===============================================================
 The section below creates a Todo database table with a "content" field. Try
@@ -8,16 +8,25 @@ specifies that any user authenticated via an API key can "create", "read",
 =========================================================================*/
 const schema = a.schema({
   Todo: a
-  .model({
-    content: a.string(),
-    devId: a.string().default('')
-  })
-  .authorization((allow) => [allow.publicApiKey().to(["create", "update", "get", "delete", "list", "search", "listen", "sync"])]),
+    .model({
+      content: a.string(),
+      devId: a.string().default(''),
+      _ttl: a.timestamp().required(),
+    })
+    .authorization(allow => [
+      allow
+        .publicApiKey()
+        .to(['create', 'update', 'get', 'delete', 'list', 'search', 'listen', 'sync']),
+    ]),
   Logs: a
-  .model({
-    content: a.string(),
-  })
-  .authorization((allow) => [allow.publicApiKey().to(["create", "update", "get", "delete", "list", "search", "listen", "sync"])]),
+    .model({
+      content: a.string(),
+    })
+    .authorization(allow => [
+      allow
+        .publicApiKey()
+        .to(['create', 'update', 'get', 'delete', 'list', 'search', 'listen', 'sync']),
+    ]),
   User: a
     .model({
       ownerId: a.string().default(''),
@@ -46,24 +55,31 @@ const schema = a.schema({
       userRole: a.integer().default(0),
       userName: a.string().default('user'),
     })
-    .authorization((allow) => [allow.publicApiKey().to(["create", "update", "get", "delete", "list", "search", "listen", "sync"])]),
+    .authorization(allow => [
+      allow
+        .publicApiKey()
+        .to(['create', 'update', 'get', 'delete', 'list', 'search', 'listen', 'sync']),
+    ]),
   BpgData: a
-  .model({
-    sys: a.integer().default(0).required(), // 血压高压
-    dia: a.integer().default(0).required(), // 血压低压
-    pulse: a.integer().default(0).required(), // 脉搏
-    arr: a.boolean().default(false).required(), // false:心率正常;true:心率不齐
-    bpLevel: a.enum(['WHO_LV0', 'WHO_LV1', 'WHO_LV2', 'WHO_LV3', 'WHO_LV4', 'WHO_LV5']), // 根据数值计算出来的标准
-    time: a.string().default('').required(), // 测量时间 时间戳
-    devId: a.string().required(), // 设备Id
-    pid: a.string().required(), // 产品pid
-    userId: a.string().required(), // 用户Id
-    reportType: a.integer().default(0).required(), // 上报类型
-    remark: a.string().default(''), // 备注
-    unallocatedId: a.string().default(''), // 未分配Id
-  })
-  .authorization((allow) => [allow.publicApiKey().to(["create", "update", "get", "delete", "list", "search", "listen", "sync"])]),
-    
+    .model({
+      sys: a.integer().default(0).required(), // 血压高压
+      dia: a.integer().default(0).required(), // 血压低压
+      pulse: a.integer().default(0).required(), // 脉搏
+      arr: a.boolean().default(false).required(), // false:心率正常;true:心率不齐
+      bpLevel: a.enum(['WHO_LV0', 'WHO_LV1', 'WHO_LV2', 'WHO_LV3', 'WHO_LV4', 'WHO_LV5']), // 根据数值计算出来的标准
+      time: a.string().default('').required(), // 测量时间 时间戳
+      devId: a.string().required(), // 设备Id
+      pid: a.string().required(), // 产品pid
+      userId: a.string().required(), // 用户Id
+      reportType: a.integer().default(0).required(), // 上报类型
+      remark: a.string().default(''), // 备注
+      unallocatedId: a.string().default(''), // 未分配Id
+    })
+    .authorization(allow => [
+      allow
+        .publicApiKey()
+        .to(['create', 'update', 'get', 'delete', 'list', 'search', 'listen', 'sync']),
+    ]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
@@ -71,7 +87,7 @@ export type Schema = ClientSchema<typeof schema>;
 export const data = defineData({
   schema,
   authorizationModes: {
-    defaultAuthorizationMode: "apiKey",
+    defaultAuthorizationMode: 'apiKey',
     // API Key is used for a.allow.public() rules
     apiKeyAuthorizationMode: {
       expiresInDays: 7,
