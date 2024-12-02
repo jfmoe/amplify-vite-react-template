@@ -3,7 +3,7 @@ import { PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import { auth } from './auth/resource';
 import { data } from './data/resource';
 import { refreshApiKey } from './jobs/refreshApiKey/resource';
-import { migrationData } from './functions/migrationData/resource';
+import { migrateData } from './functions/migrateData/resource';
 import { BackupPlan, BackupPlanRule, BackupResource, BackupVault } from 'aws-cdk-lib/aws-backup';
 import { Schedule } from 'aws-cdk-lib/aws-events';
 import { Duration } from 'aws-cdk-lib/core';
@@ -12,7 +12,7 @@ const backend = defineBackend({
   auth,
   data,
   refreshApiKey,
-  migrationData,
+  migrateData,
 });
 
 // 赋予 Lambda 函数更新 API Key 的权限
@@ -25,8 +25,8 @@ refreshApiKeyLambda.addToRolePolicy(
 );
 
 // 赋予 Lambda 函数 dynamodb 权限
-const migrationDataLambda = backend.migrationData.resources.lambda;
-migrationDataLambda.addToRolePolicy(
+const migrateDataLambda = backend.migrateData.resources.lambda;
+migrateDataLambda.addToRolePolicy(
   new PolicyStatement({
     actions: ['dynamodb:Scan', 'dynamodb:PutItem'],
     resources: ['*'],

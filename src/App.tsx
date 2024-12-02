@@ -49,8 +49,8 @@ const App: React.FC = () => {
     client.models.Logs.create({ content: window.prompt('Logs content') });
   }
 
-  function migrationData() {
-    client.queries.migrationData({
+  function migrateData() {
+    client.queries.migrateData({
       sourceTable: window.prompt('source') || '',
       targetTable: window.prompt('target') || '',
     });
@@ -77,7 +77,7 @@ const App: React.FC = () => {
         ))}
       </ul>
       <h1>Migration Data</h1>
-      <button onClick={migrationData}>start</button>
+      <button onClick={migrateData}>start</button>
     </main>
   );
 };

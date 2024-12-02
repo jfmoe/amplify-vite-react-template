@@ -2,10 +2,13 @@
 import type { Schema } from '../../data/resource';
 import { DynamoDBClient, PutItemCommand, ScanCommand } from '@aws-sdk/client-dynamodb';
 
-export const handler: Schema['migrationData']['functionHandler'] = async event => {
+export const handler: Schema['migrateData']['functionHandler'] = async event => {
   try {
     const { sourceTable, targetTable } = event.arguments;
+
     console.log(`Migrating data from ${sourceTable} to ${targetTable}`);
+
+    if (!sourceTable || !targetTable || sourceTable === targetTable) return false;
 
     const allItems = await getAllItemsFromSourceTable(sourceTable);
 
@@ -52,7 +55,7 @@ async function getAllItemsFromSourceTable(sourceTable: string) {
     nextScan = await client.send(new ScanCommand(input));
     items = items.concat(nextScan.Items || []);
   }
-  console.log(items);
+  console.log('items count =>', items.length);
   return items;
 }
 
