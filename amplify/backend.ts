@@ -24,6 +24,15 @@ refreshApiKeyLambda.addToRolePolicy(
   }),
 );
 
+// 赋予 Lambda 函数 dynamodb 权限
+const migrationDataLambda = backend.migrationData.resources.lambda;
+migrationDataLambda.addToRolePolicy(
+  new PolicyStatement({
+    actions: ['dynamodb:Scan', 'dynamodb:PutItem'],
+    resources: ['*'],
+  }),
+);
+
 const { cfnResources } = backend.data.resources;
 
 // 容灾处理：为所有 table 开启时间点恢复功能
