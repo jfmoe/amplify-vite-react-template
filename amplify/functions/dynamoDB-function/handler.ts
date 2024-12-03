@@ -13,7 +13,7 @@ const dynamoDBClient = new DynamoDBClient({});
 
 export const handler: DynamoDBStreamHandler = async event => {
   for (const record of event.Records) {
-    logger.info(`Processing record: ${record}`);
+    logger.info(`Processing record: ${JSON.stringify(record)}`);
 
     if (record.eventName === 'INSERT') {
       const newImage = record.dynamodb?.NewImage;
@@ -23,7 +23,7 @@ export const handler: DynamoDBStreamHandler = async event => {
       const input = {
         TableName: env.TABLE_NAME,
         Key: {
-          id: { S: newImage?.id.S as string },
+          id: newImage?.id,
         },
         UpdateExpression: 'SET #expiredAt = :expiredAt',
         ExpressionAttributeNames: {
@@ -37,6 +37,8 @@ export const handler: DynamoDBStreamHandler = async event => {
           },
         },
       };
+
+      logger.info(`Update Item Input: ${JSON.stringify(input)}`);
 
       try {
         // @ts-expect-error input
