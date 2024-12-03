@@ -33,7 +33,8 @@ export const handler: DynamoDBStreamHandler = async event => {
           ':expiredAt': {
             N: dayjs(newImage?.createdAt?.S ?? Date.now())
               .add(1, 'minute')
-              .unix(),
+              .unix()
+              .toString(),
           },
         },
       };
