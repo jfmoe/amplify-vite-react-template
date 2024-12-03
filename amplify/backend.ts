@@ -1,5 +1,7 @@
 import { defineBackend } from '@aws-amplify/backend';
-import { PolicyStatement } from 'aws-cdk-lib/aws-iam';
+import { Stack } from 'aws-cdk-lib';
+import { Policy, PolicyStatement, Effect } from 'aws-cdk-lib/aws-iam';
+import { StartingPosition, EventSourceMapping } from 'aws-cdk-lib/aws-lambda';
 import { auth } from './auth/resource';
 import { data } from './data/resource';
 import { refreshApiKey } from './jobs/refreshApiKey/resource';
@@ -7,12 +9,14 @@ import { migrateData } from './functions/migrateData/resource';
 import { BackupPlan, BackupPlanRule, BackupResource, BackupVault } from 'aws-cdk-lib/aws-backup';
 import { Schedule } from 'aws-cdk-lib/aws-events';
 import { Duration } from 'aws-cdk-lib/core';
+import { dynamoDBFunction } from './functions/dynamoDB-function/resource';
 
 const backend = defineBackend({
   auth,
   data,
   refreshApiKey,
   migrateData,
+  dynamoDBFunction,
 });
 
 // 赋予 Lambda 函数更新 API Key 的权限
@@ -41,8 +45,8 @@ for (const table of Object.values(cfnResources.amplifyDynamoDbTables)) {
 }
 
 // 根据表中设定的 TTL 属性，为表开启 TTL 功能（如果当前时间超过设定的 Unix timestamp，则该条数据过期）
-cfnResources.amplifyDynamoDbTables['Todo'].timeToLiveAttribute = {
-  attributeName: '_ttl',
+cfnResources.amplifyDynamoDbTables['Logs'].timeToLiveAttribute = {
+  attributeName: 'expiredAt',
   enabled: true,
 };
 
@@ -76,3 +80,32 @@ plan.addSelection('BackupPlanSelection', {
   resources: myTables.map(table => BackupResource.fromDynamoDbTable(table)),
   allowRestores: true,
 });
+
+const logTable = backend.data.resources.tables['Logs'];
+const policy = new Policy(Stack.of(logTable), 'dynamoDBFunctionStreamingPolicy', {
+  statements: [
+    new PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: [
+        'dynamodb:DescribeStream',
+        'dynamodb:GetRecords',
+        'dynamodb:GetShardIterator',
+        'dynamodb:ListStreams',
+      ],
+      resources: ['*'],
+    }),
+  ],
+});
+backend.dynamoDBFunction.resources.lambda.role?.attachInlinePolicy(policy);
+
+const mapping = new EventSourceMapping(
+  Stack.of(logTable),
+  'MyDynamoDBFunctionTodoEventStreamMapping',
+  {
+    target: backend.dynamoDBFunction.resources.lambda,
+    eventSourceArn: logTable.tableStreamArn,
+    startingPosition: StartingPosition.LATEST,
+  },
+);
+
+mapping.node.addDependency(policy);

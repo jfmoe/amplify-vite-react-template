@@ -12,7 +12,6 @@ const schema = a.schema({
     .model({
       content: a.string(),
       devId: a.string().default(''),
-      _ttl: a.timestamp().required(),
     })
     .authorization(allow => [
       allow
@@ -22,6 +21,7 @@ const schema = a.schema({
   Logs: a
     .model({
       content: a.string(),
+      expiredAt: a.timestamp(),
     })
     .authorization(allow => [
       allow
@@ -97,6 +97,7 @@ export type Schema = ClientSchema<typeof schema>;
 
 export const data = defineData({
   schema,
+
   authorizationModes: {
     defaultAuthorizationMode: 'apiKey',
     // API Key is used for a.allow.public() rules

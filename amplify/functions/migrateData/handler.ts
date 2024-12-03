@@ -2,6 +2,8 @@
 import type { Schema } from '../../data/resource';
 import { DynamoDBClient, PutItemCommand, ScanCommand } from '@aws-sdk/client-dynamodb';
 
+const client = new DynamoDBClient({});
+
 export const handler: Schema['migrateData']['functionHandler'] = async event => {
   try {
     const { sourceTable, targetTable } = event.arguments;
@@ -40,7 +42,6 @@ async function getAllItemsFromSourceTable(sourceTable: string) {
   const input = {
     TableName: sourceTable,
   };
-  const client = new DynamoDBClient({});
   const command = new ScanCommand(input);
 
   let nextScan = await client.send(command);
@@ -65,7 +66,6 @@ async function createPutPromise(item: any, targetTable: string) {
     TableName: targetTable,
   };
 
-  const client = new DynamoDBClient({});
   const command = new PutItemCommand(input);
   return client.send(command);
 }
