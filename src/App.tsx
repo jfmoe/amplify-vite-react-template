@@ -31,7 +31,6 @@ const App: React.FC = () => {
     const data = await client.models.Todo.create({
       content: window.prompt('Todo content'),
       devId: '123',
-      _ttl: Math.floor(Date.now() / 1000) + 60,
     });
 
     console.log(data);
@@ -41,8 +40,8 @@ const App: React.FC = () => {
     client.models.Todo.update({ id, content: window.prompt('Todo content') });
   }
 
-  function deleteLog(id: string) {
-    client.models.Logs.delete({ id });
+  function updateLog(id: string) {
+    client.models.Todo.update({ id, content: window.prompt('log content') });
   }
 
   function createLogs() {
@@ -62,7 +61,7 @@ const App: React.FC = () => {
       <button onClick={createLogs}>+ new log</button>
       <ul>
         {logs.map(log => (
-          <li key={log.id} onClick={() => deleteLog(log.id)}>
+          <li key={log.id} onClick={() => updateLog(log.id)}>
             {log.content}
           </li>
         ))}
